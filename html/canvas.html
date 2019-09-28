@@ -1,0 +1,150 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>canvasUsage</title>
+    <meta charset="UTF-8" />
+    <style type="text/css">
+        table {
+            width: 1200px;
+        }
+
+        table tr td {
+            border-bottom: #FF0000 solid 1px;
+            text-align: left;
+        }
+
+        #example {
+            margin-bottom: -500px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <h1>车位</h1>
+    <hr> -->
+    <canvas id="mycanvas" width="1000" height="800">
+    </canvas>
+
+</body>
+
+<script type="text/javascript" language="javascript">
+    var canvas = document.getElementById("mycanvas");
+    var ctx = canvas.getContext("2d");
+
+    var img = new Image();
+    img.src = "4.PNG";
+    var imgK = new Image();
+    imgK.src = "3.PNG";
+
+    var widthImg = null;
+    var heightImg = null;
+
+    var gap_w = 5;
+    var gap_h = 80;
+    var gap_min = 10;
+
+    var pos_row = 8;
+    var pos_cloumn = 25;
+
+    var canvas_width = canvas['width'];
+    var canvas_height = canvas['height'];
+
+    console.log("canvas_width=" + canvas_width);
+    console.log("canvas_height=" + canvas_height);
+
+    gap_h = canvas_height / 3 / 7;
+    gap_min = gap_h / 8;
+
+    widthImg = (canvas_width - gap_w * pos_cloumn) / pos_cloumn;
+    heightImg = (canvas_height - canvas_height / 3) / pos_row;
+
+    console.log("widthImg=" + widthImg);
+    console.log("heightImg=" + heightImg);
+
+    console.log("gap_h=" + gap_h);
+    console.log("gap_min=" + gap_min);
+
+    var a = [];
+    for (var i = 0; i < pos_row; i++) {
+        var b = [];
+        for (var j = 0; j < pos_cloumn; j++) {
+            b[j] = random(0, 2) + "";
+            if (i == 0 && j < 11) {
+                b[j] = "2";
+            }
+            if (i == 7 && j > 8) {
+                b[j] = "2";
+            }
+            if ((i == 1 || i == 2) && j < 4) {
+                b[j] = "2";
+            }
+        }
+        a[i] = b;
+    }
+    console.log(a);  //返回0 1的二维数列
+    var car_flag = a;
+
+
+    img.onload = function () {
+        // widthImg = img.width;
+        //heightImg = img.height - 20;
+        var temp_h = -heightImg - gap_h;
+        for (var i = 0; i < pos_row; i++) {
+            var temp_gap_h = gap_h;
+            if (i == 2 || i == 4 || i == 6) {
+                temp_gap_h = gap_min;
+            }
+            temp_h += heightImg + temp_gap_h;
+            for (var j = 0; j < pos_cloumn; j++) {
+                if (car_flag[i][j] == "2") {
+                    // 2 没有位  1 有车  0 空车位
+                    continue;
+                }
+                ctx.drawImage(img, j * (widthImg + gap_w), temp_h, widthImg, heightImg);
+            }
+        }
+    }
+
+    imgK.onload = function () {
+        var temp_h = -heightImg - gap_h;
+        for (var i = 0; i < pos_row; i++) {
+            var temp_gap_h = gap_h;
+            if (i == 2 || i == 4 || i == 6) {
+                temp_gap_h = gap_min;
+            }
+            temp_h += heightImg + temp_gap_h;
+            for (var j = 0; j < pos_cloumn; j++) {
+                if (car_flag[i][j] == "2") {
+                    continue;
+                }
+                if (car_flag[i][j] == "0") {
+                    continue;
+                }
+                ctx.drawImage(imgK, j * (widthImg + gap_w), temp_h, widthImg, heightImg);
+            }
+        }
+    }
+
+    function random(lower, upper) {
+        return Math.floor(Math.random() * (upper - lower)) + lower;
+    }
+
+    window.onload = function () {
+        let x = 0
+        let y = 0
+        canvas.addEventListener('click', (e) => {
+            x = e.pageX - canvas.getBoundingClientRect().left
+            y = e.pageY - canvas.getBoundingClientRect().top
+            if (ctx.isPointInPath(x, y)) {
+                //点击了矩形
+
+            }
+            console.log("[x=" + x + ",y=" + y + "]");
+            alert("[x=" + x + ",y=" + y + "]");
+        })
+    }
+
+</script>
+
+</html>
