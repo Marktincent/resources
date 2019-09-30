@@ -45,7 +45,7 @@
     var gap_min = 10;
 
     var pos_row = 8;
-    var pos_cloumn = 25;
+    var pos_cloumn = 27;
 
     var canvas_width = canvas['width'];
     var canvas_height = canvas['height'];
@@ -77,6 +77,9 @@
                 b[j] = "2";
             }
             if ((i == 1 || i == 2) && j < 4) {
+                b[j] = "2";
+            }
+            if (j == 0 || j == 26) {
                 b[j] = "2";
             }
         }
@@ -141,10 +144,53 @@
 
             }
             console.log("[x=" + x + ",y=" + y + "]");
-            alert("[x=" + x + ",y=" + y + "]");
+            // alert("[x=" + x + ",y=" + y + "]");
+            set_position(x, y);
         })
     }
 
+    var start_x = 0, start_y = 0, end_x = 0, end_y = 0;
+    var start_flag = 0, end_flag = 0;
+    var old_arr = new Array();
+    function set_position(x, y) {
+        if (start_flag == 0) {
+            if (old_arr.length > 0) {
+                drag_delete_line(old_arr[0], old_arr[1], old_arr[2], old_arr[3]);
+            }
+            start_x = x;
+            start_y = y;
+            start_flag = 1;
+            return true;
+        }
+        if (end_flag == 0) {
+            end_x = x;
+            end_y = y;
+            end_flag = 1;
+        }
+        if (start_flag == 1 && end_flag == 1) {
+            drag_line(start_x, start_y, end_x, end_y);
+            start_flag = 0;
+            end_flag = 0;
+            old_arr[0] = start_x;
+            old_arr[1] = start_y;
+            old_arr[2] = end_x;
+            old_arr[3] = end_y;
+        }
+    }
+
+    function drag_line(start_x, start_y, end_x, end_y) {
+        ctx.moveTo(start_x, start_y);
+        ctx.lineTo(end_x, end_y);
+        //ctx.lineTo(100, 600);
+        ctx.lineWidth = 10;
+        ctx.strokeStyle = "red";
+        ctx.stroke();
+    }
+
+    function drag_delete_line(start_x, start_y, end_x, end_y) {
+        //ctx.clearRect(start_x, start_y, end_x, end_y);
+        //ctx.clip();
+    }
 </script>
 
 </html>
